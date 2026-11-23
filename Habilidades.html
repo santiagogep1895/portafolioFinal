@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Habilidades</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <main class="flex-1 overflow-y-auto no-scrollbar px-8 pt-16 pb-40">
+            <header class="mb-10">
+                <p class="text-[9px] font-bold tracking-wider text-brand-textMain mb-1.5 uppercase">Mi Perfil</p>
+                <h1 class="text-[28px] leading-tight font-extrabold text-brand-textMain mb-3 tracking-tight">Habilidades</h1>
+                <p class="text-[11px] text-brand-textMuted font-medium leading-relaxed max-w-[280px]">
+                    Reconoce tus fortalezas y da seguimiento a tu progreso.
+                </p>
+            </header>
+
+            <section class="mb-24">
+                <h2 class="text-[9px] font-bold tracking-wider text-brand-textMuted mb-6 uppercase">Habilidades Blandas</h2>
+                <div id="lista-blandas" class="flex flex-wrap gap-2.5"></div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-[9px] font-bold tracking-wider text-brand-textMuted mb-6 uppercase">Habilidades Técnicas</h2>
+                <div id="lista-tecnicas" class="flex flex-wrap gap-2.5"></div>
+            </section>
+        </main>
+
+        <div class="admin-only absolute bottom-[92px] left-8 right-8 z-20">
+            <button onclick="openModal()" class="w-full bg-brand-btnBg text-brand-textMain font-bold text-[11px] py-4 rounded-xl shadow-sm flex items-center justify-center gap-1.5 transition-transform active:translate-y-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i> Añadir habilidad
+            </button>
+        </div>
+
+        <nav class="absolute bottom-6 left-6 right-6 bg-brand-navBg rounded-2xl px-6 py-5 flex justify-between items-center shadow-lg z-10">
+            <a href="perfil-usuario.html" class="text-[9px] font-bold text-brand-textMain">Inicio</a>
+            <a href="ProyectosPracticas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Proyectos</a>
+            <a href="ExperienciaLaboral.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Trayectoria</a>
+            <a href="InteresMetas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Metas</a>
+        </nav>
+
+        <div id="addSkillModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-brand-surface w-full max-w-sm rounded-[32px] p-6 shadow-2xl modal-animate flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-brand-textMain">Nueva Habilidad</h3>
+                    <button onclick="closeModal()" class="text-brand-textMuted hover:text-brand-textMain transition-colors bg-gray-100 rounded-full p-2">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="addSkillForm" class="flex flex-col gap-5">
+                    <div>
+                        <label class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Tipo de Habilidad</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="skillType" value="blanda" class="peer sr-only" checked>
+                                <div class="w-full text-center py-3 rounded-xl border-2 border-gray-100 bg-gray-50 text-brand-textMuted text-xs font-semibold transition-all peer-checked:border-brand-textMain peer-checked:bg-brand-textMain peer-checked:text-white">
+                                    Blanda
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="skillType" value="tecnica" class="peer sr-only">
+                                <div class="w-full text-center py-3 rounded-xl border-2 border-gray-100 bg-gray-50 text-brand-textMuted text-xs font-semibold transition-all peer-checked:border-brand-textMain peer-checked:bg-brand-textMain peer-checked:text-white">
+                                    Técnica
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="skillName" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Nombre de la habilidad</label>
+                        <input type="text" id="skillName" required placeholder="Ej. Liderazgo, HTML5..." class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-btnBg focus:bg-white transition-colors placeholder:text-gray-400">
+                    </div>
+                    <button type="submit" class="mt-2 w-full bg-brand-textMain text-white font-bold text-sm py-4 rounded-[14px] shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+                        <i data-lucide="check" class="w-4 h-4"></i> Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/habilidades.js"></script>
+</body>
+</html>

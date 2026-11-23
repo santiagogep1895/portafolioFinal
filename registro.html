@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Crear Cuenta</title>
+
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <main class="flex-1 overflow-y-auto no-scrollbar px-6 pt-10 pb-10 flex flex-col justify-between">
+            <div>
+                <header class="mb-6">
+                    <a href="index.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-[#1f242d] mb-4 hover:opacity-75 transition-opacity">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i> Volver al inicio de sesión
+                    </a>
+                    <div class="w-12 h-12 rounded-2xl bg-[#2f3842] text-white flex items-center justify-center shadow-md mb-4">
+                        <i data-lucide="user-plus" class="w-6 h-6"></i>
+                    </div>
+                    <h1 class="text-2xl font-extrabold text-[#1f242d] tracking-tight">Crear cuenta</h1>
+                    <p class="text-xs text-[#636873] mt-1 leading-relaxed">
+                        Registra tus credenciales de administrador para gestionar tu portafolio de evidencias.
+                    </p>
+                </header>
+
+                <!-- Alerta de error o éxito -->
+                <div id="authAlert" class="hidden mb-4 p-3.5 rounded-2xl text-xs font-semibold flex items-start gap-2.5 animate-fade-in">
+                    <i id="authAlertIcon" data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                    <span id="authAlertText">Mensaje de validación</span>
+                </div>
+
+                <!-- Formulario de Registro -->
+                <form id="registerForm" onsubmit="handleRegister(event)" class="bg-[#f7f5f0] rounded-[2rem] p-5 shadow-xl border border-[#e6e1d6] flex flex-col gap-3.5">
+                    <div>
+                        <label for="regName" class="block text-[10px] font-bold text-[#737882] uppercase tracking-wider mb-1">Nombre completo *</label>
+                        <div class="relative">
+                            <i data-lucide="user" class="w-4 h-4 text-[#8c919c] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="regName" required placeholder="Ej. Santiago Morales"
+                                   class="w-full bg-[#fcfbf9] border border-[#dcd6cb] rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-[#1f242d] focus:outline-none focus:border-[#2f3842]">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="regRole" class="block text-[10px] font-bold text-[#737882] uppercase tracking-wider mb-1">Perfil o Carrera *</label>
+                        <div class="relative">
+                            <i data-lucide="briefcase" class="w-4 h-4 text-[#8c919c] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input type="text" id="regRole" required placeholder="Ej. Estudiante de Ingeniería"
+                                   class="w-full bg-[#fcfbf9] border border-[#dcd6cb] rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-[#1f242d] focus:outline-none focus:border-[#2f3842]">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="regEmail" class="block text-[10px] font-bold text-[#737882] uppercase tracking-wider mb-1">Correo electrónico *</label>
+                        <div class="relative">
+                            <i data-lucide="mail" class="w-4 h-4 text-[#8c919c] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input type="email" id="regEmail" required placeholder="correo@ejemplo.com"
+                                   class="w-full bg-[#fcfbf9] border border-[#dcd6cb] rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-[#1f242d] focus:outline-none focus:border-[#2f3842]">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="regPassword" class="block text-[10px] font-bold text-[#737882] uppercase tracking-wider mb-1">Contraseña (mín. 6 caracteres) *</label>
+                        <div class="relative">
+                            <i data-lucide="lock" class="w-4 h-4 text-[#8c919c] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input type="password" id="regPassword" required minlength="6" placeholder="••••••••"
+                                   class="w-full bg-[#fcfbf9] border border-[#dcd6cb] rounded-xl pl-10 pr-10 py-2.5 text-sm font-medium text-[#1f242d] focus:outline-none focus:border-[#2f3842]">
+                            <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#8c919c] hover:text-[#1f242d]">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="regConfirmPassword" class="block text-[10px] font-bold text-[#737882] uppercase tracking-wider mb-1">Confirmar contraseña *</label>
+                        <div class="relative">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-[#8c919c] absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                            <input type="password" id="regConfirmPassword" required minlength="6" placeholder="••••••••"
+                                   class="w-full bg-[#fcfbf9] border border-[#dcd6cb] rounded-xl pl-10 pr-10 py-2.5 text-sm font-medium text-[#1f242d] focus:outline-none focus:border-[#2f3842]">
+                            <button type="button" onclick="togglePasswordVisibility('regConfirmPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#8c919c] hover:text-[#1f242d]">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="mt-2 w-full bg-[#2f3842] hover:bg-[#1f242d] text-white font-bold text-sm py-3.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+                        <span>Registrar cuenta</span>
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                    </button>
+                </form>
+            </div>
+
+            <p class="text-center text-xs text-[#636873] mt-6">
+                ¿Ya tienes una cuenta?
+                <a href="index.html" class="font-bold text-[#1f242d] underline">Inicia sesión aquí</a>
+            </p>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>

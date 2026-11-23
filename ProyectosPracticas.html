@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Proyectos y Prácticas</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <main class="flex-1 overflow-y-auto no-scrollbar px-6 pt-16 pb-40">
+            <header class="mb-8">
+                <p class="text-[10px] font-bold tracking-wider text-brand-textMain mb-1 uppercase">Portafolio</p>
+                <h1 class="text-3xl leading-tight font-extrabold text-brand-textMain mb-3 tracking-tight">Proyectos y prácticas</h1>
+            </header>
+
+            <div id="projectsList" class="flex flex-col gap-5">
+                <div id="emptyState" class="flex flex-col items-center justify-center py-10 opacity-70">
+                    <div class="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-4">
+                        <i data-lucide="folder-open" class="w-8 h-8 text-brand-textMain/50"></i>
+                    </div>
+                    <p id="emptyStateText" class="text-sm font-medium text-brand-textMain/70 text-center px-4">Aún no tienes proyectos registrados. Usa el botón de abajo para añadir uno.</p>
+                </div>
+            </div>
+        </main>
+
+        <div class="admin-only absolute bottom-[92px] left-6 right-6 z-20">
+            <button onclick="openModal()" class="w-full bg-brand-beigeLight text-brand-textMain font-bold text-xs py-4 rounded-[12px] shadow-chip border border-brand-beigeDark/30 flex items-center justify-center gap-2 transition-transform active:translate-y-1 active:shadow-none">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                Añadir proyecto
+            </button>
+        </div>
+
+        <nav class="absolute bottom-6 left-6 right-6 bg-brand-navBg rounded-2xl px-6 py-5 flex justify-between items-center shadow-lg z-10">
+            <a href="perfil-usuario.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Inicio</a>
+            <a href="#" class="text-[9px] font-bold text-brand-textMain">Proyectos</a>
+            <a href="ExperienciaLaboral.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Trayectoria</a>
+            <a href="InteresMetas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Metas</a>
+        </nav>
+
+        <div id="addProjectModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-brand-surface w-full max-w-sm rounded-[32px] p-6 shadow-2xl modal-animate flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-brand-textMain">Nuevo Proyecto</h3>
+                    <button onclick="closeModal()" class="text-brand-textMuted hover:text-brand-textMain transition-colors bg-gray-100 rounded-full p-2">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="addProjectForm" class="flex flex-col gap-4">
+                    <div>
+                        <label for="projectName" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Nombre del Proyecto</label>
+                        <input type="text" id="projectName" required placeholder="Ej. Rediseño App Móvil" 
+                               class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-beigeDark focus:bg-white transition-colors placeholder:text-gray-400">
+                    </div>
+                    <div>
+                        <label for="projectRole" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Rol o Contribución</label>
+                        <input type="text" id="projectRole" required placeholder="Ej. Diseñador UI/UX" 
+                               class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-beigeDark focus:bg-white transition-colors placeholder:text-gray-400">
+                    </div>
+                    <div>
+                        <label for="projectDesc" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Descripción breve</label>
+                        <textarea id="projectDesc" rows="3" required placeholder="Describe los logros principales..." 
+                                  class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-beigeDark focus:bg-white transition-colors placeholder:text-gray-400 resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="mt-4 w-full bg-brand-textMain text-white font-bold text-sm py-4 rounded-[14px] shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+                        <i data-lucide="check" class="w-4 h-4"></i>
+                        Guardar Proyecto
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/proyectos.js"></script>
+</body>
+</html>

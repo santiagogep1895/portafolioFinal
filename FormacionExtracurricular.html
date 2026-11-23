@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Formación Extracurricular</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <div id="toastNotification" class="fixed top-6 left-1/2 -translate-x-1/2 bg-brand-textMain text-white px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-semibold z-[60] transition-all duration-300 translate-y-[-200%] opacity-0 pointer-events-none">
+            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+            <span id="toastMessage">Operación realizada</span>
+        </div>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar px-6 pt-12 pb-40">
+            <header class="mb-8 flex justify-between items-start gap-3">
+                <div>
+                    <a href="perfil-usuario.html" class="inline-flex items-center gap-1 text-[10px] font-bold tracking-wider text-brand-textMain mb-2 uppercase hover:opacity-75 transition-opacity">
+                        <i data-lucide="arrow-left" class="w-3 h-3"></i> Mi Perfil
+                    </a>
+                    <h1 class="text-3xl leading-tight font-extrabold text-brand-textMain mb-2 tracking-tight">Formación extracurricular</h1>
+                    <p class="text-xs text-brand-textMain/80 font-medium leading-relaxed max-w-[250px]">
+                        Cursos, talleres, congresos y certificaciones complementarias.
+                    </p>
+                </div>
+                <button type="button" onclick="openSparkleModal()" aria-label="Resumen de trayectoria" class="mt-6 w-10 h-10 rounded-full bg-brand-surface/90 border border-white/60 shadow-card flex items-center justify-center text-brand-textMain hover:scale-105 active:scale-95 transition-transform shrink-0">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                </button>
+            </header>
+
+            <div id="emptyState" class="bg-brand-surface/70 border border-white/50 rounded-[24px] p-8 text-center shadow-card">
+                <div class="w-12 h-12 rounded-2xl bg-brand-btnBg/50 flex items-center justify-center mx-auto mb-3 text-brand-textMain">
+                    <i data-lucide="award" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-sm font-bold text-brand-textMain mb-1">Sin actividades registradas</h2>
+                <p id="emptyStateText" class="text-xs text-brand-textMuted leading-relaxed">
+                    Agrega tus cursos, talleres o certificaciones para enriquecer tu portafolio.
+                </p>
+            </div>
+
+            <section id="activitiesList" class="flex flex-col gap-3" aria-label="Lista de formación extracurricular"></section>
+        </main>
+
+        <div class="admin-only absolute bottom-[92px] left-6 right-6 z-20">
+            <button type="button" onclick="openAddModal()" class="w-full bg-brand-btnBg hover:bg-brand-beigeDark/60 text-brand-textMain font-bold text-xs py-4 rounded-xl shadow-chip border border-brand-beigeDark/30 flex items-center justify-center gap-2 transition-transform active:translate-y-1">
+                <i data-lucide="plus" class="w-4 h-4"></i> Añadir actividad
+            </button>
+        </div>
+
+        <nav class="absolute bottom-6 left-6 right-6 bg-brand-navBg rounded-2xl px-6 py-5 flex justify-between items-center shadow-lg z-10">
+            <a href="perfil-usuario.html" class="text-[9px] font-bold text-brand-textMain">Inicio</a>
+            <a href="ProyectosPracticas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Proyectos</a>
+            <a href="ExperienciaLaboral.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Trayectoria</a>
+            <a href="InteresMetas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Metas</a>
+        </nav>
+
+        <div id="addModal" onclick="handleBackdropClick(event, 'addModal')" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div role="dialog" aria-labelledby="addModalTitle" class="bg-[#F5F2EA] w-full max-w-sm rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-animate">
+                <div class="px-6 py-5 border-b border-gray-300/50 flex justify-between items-center bg-[#EAE5D9]/60">
+                    <h2 id="addModalTitle" class="text-lg font-bold text-brand-textMain">Nueva Actividad</h2>
+                    <button type="button" onclick="closeModal('addModal')" aria-label="Cerrar" class="text-brand-textMuted hover:text-brand-textMain transition-colors rounded-full p-1.5 hover:bg-black/5">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto no-scrollbar">
+                    <form id="addActivityForm" onsubmit="handleSaveActivity(event)" class="flex flex-col gap-4">
+                        <div>
+                            <label for="actTitle" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Título de la actividad *</label>
+                            <input type="text" id="actTitle" required placeholder="Ej. Certificación en UX Strategy" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm text-brand-textMain focus:outline-none focus:ring-2 focus:ring-brand-btnBg transition-all placeholder:text-gray-400">
+                        </div>
+                        <div>
+                            <label for="actType" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Tipo de formación *</label>
+                            <select id="actType" required class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm text-brand-textMain focus:outline-none focus:ring-2 focus:ring-brand-btnBg transition-all">
+                                <option value="Certificación">Certificación Profesional</option>
+                                <option value="Curso">Curso Especializado</option>
+                                <option value="Taller">Taller Práctico</option>
+                                <option value="Congreso">Congreso / Conferencia</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="actInstitution" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Institución / Emisor *</label>
+                            <input type="text" id="actInstitution" required placeholder="Ej. Google / Coursera / Tec" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm text-brand-textMain focus:outline-none focus:ring-2 focus:ring-brand-btnBg transition-all placeholder:text-gray-400">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="actYear" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Año</label>
+                                <input type="number" id="actYear" min="1990" max="2030" value="2026" required class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm text-brand-textMain focus:outline-none focus:ring-2 focus:ring-brand-btnBg transition-all">
+                            </div>
+                            <div>
+                                <label for="actHours" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Duración (hrs)</label>
+                                <input type="text" id="actHours" placeholder="Ej. 40" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm text-brand-textMain focus:outline-none focus:ring-2 focus:ring-brand-btnBg transition-all placeholder:text-gray-400">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="actDesc" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Competencias / Evidencia</label>
+                            <textarea id="actDesc" rows="3" placeholder="Describe los conocimientos adquiridos o el enlace a tu certificado..." class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm text-brand-textMain focus:outline-none focus:ring-2 focus:ring-brand-btnBg transition-all placeholder:text-gray-400 resize-none"></textarea>
+                        </div>
+                        <div class="flex gap-3 justify-end pt-2">
+                            <button type="button" onclick="closeModal('addModal')" class="px-4 py-2.5 text-xs font-bold text-brand-textMain hover:bg-black/5 rounded-xl transition-colors">Cancelar</button>
+                            <button type="submit" class="px-5 py-2.5 text-xs font-bold text-white bg-brand-textMain hover:opacity-90 rounded-xl shadow-md flex items-center gap-1.5 transition-all active:scale-95">
+                                <i data-lucide="check" class="w-4 h-4"></i> Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="detailModal" onclick="handleBackdropClick(event, 'detailModal')" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div role="dialog" aria-labelledby="detailTitle" class="bg-[#F5F2EA] w-full max-w-sm rounded-[32px] p-6 shadow-2xl modal-animate">
+                <div class="flex justify-between items-start gap-3 mb-4">
+                    <div>
+                        <span id="detailType" class="inline-block px-2.5 py-1 rounded-lg bg-brand-btnBg/60 text-brand-textMain text-[10px] font-bold uppercase tracking-wider mb-2">Certificación</span>
+                        <h2 id="detailTitle" class="text-lg font-extrabold text-brand-textMain leading-snug">Detalle de Actividad</h2>
+                    </div>
+                    <button type="button" onclick="closeModal('detailModal')" aria-label="Cerrar" class="text-brand-textMuted hover:text-brand-textMain transition-colors rounded-full p-1.5 hover:bg-black/5">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="bg-white/70 border border-gray-200/80 p-3.5 rounded-2xl mb-4 flex flex-col gap-2 text-xs text-brand-textMuted">
+                    <div class="flex items-center gap-2"><i data-lucide="building" class="w-4 h-4 text-brand-textMain shrink-0"></i><span id="detailInstitution" class="font-medium">Institución</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4 text-brand-textMain shrink-0"></i><span id="detailDate">Completado en 2026</span></div>
+                    <div class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4 text-brand-textMain shrink-0"></i><span id="detailHours">Duración variable</span></div>
+                </div>
+                <p id="detailDescription" class="text-xs leading-relaxed text-brand-textMain/80 mb-6">Cargando información...</p>
+                <div class="flex gap-3">
+                    <button type="button" id="deleteActBtn" onclick="deleteCurrentActivity()" class="admin-only flex-1 py-3 px-4 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Eliminar
+                    </button>
+                    <button type="button" onclick="showToast('Verificando evidencia digital...'); closeModal('detailModal');" class="flex-1 py-3 px-4 rounded-xl bg-brand-textMain text-white hover:opacity-90 font-bold text-xs flex items-center justify-center gap-1.5 shadow-md transition-all">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> Ver evidencia
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sparkleModal" onclick="handleBackdropClick(event, 'sparkleModal')" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div role="dialog" aria-labelledby="sparkleTitle" class="bg-[#F5F2EA] w-full max-w-sm rounded-[32px] p-6 shadow-2xl modal-animate">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-2.5">
+                        <div class="bg-brand-btnBg p-2 rounded-full text-brand-textMain"><i data-lucide="sparkles" class="w-4 h-4"></i></div>
+                        <h2 id="sparkleTitle" class="text-base font-extrabold text-brand-textMain">Resumen de Trayectoria</h2>
+                    </div>
+                    <button type="button" onclick="closeModal('sparkleModal')" aria-label="Cerrar" class="text-brand-textMuted hover:text-brand-textMain transition-colors rounded-full p-1.5 hover:bg-black/5">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="text-xs text-brand-textMuted leading-relaxed flex flex-col gap-3 mb-5">
+                    <p>Basado en tus registros de formación extracurricular en el Portal de Evidencias:</p>
+                    <div class="bg-white/75 p-3.5 rounded-2xl border border-gray-200/80">
+                        <div class="font-bold text-brand-textMain mb-1">Progreso de Perfil</div>
+                        <div id="summaryCountText" class="text-[11px] text-brand-textMuted">0 formaciones registradas actualmente.</div>
+                    </div>
+                    <div class="bg-white/75 p-3.5 rounded-2xl border border-gray-200/80">
+                        <div class="font-bold text-brand-textMain mb-1">Recomendación de Formación</div>
+                        <div class="text-[11px] text-brand-textMuted">Se sugiere incorporar talleres de Gestión de Proyectos Ágiles para complementar tu perfil técnico.</div>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('sparkleModal'); showToast('Reporte generado correctamente');" class="w-full py-3.5 rounded-xl bg-brand-textMain text-white font-bold text-xs shadow-md hover:opacity-90 transition-all">
+                    Descargar Resumen PDF
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/formacion-extracurricular.js"></script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Formación Académica</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <main class="flex-1 overflow-y-auto no-scrollbar px-6 pt-12 pb-40">
+            <header class="mb-8">
+                <a href="perfil-usuario.html" class="inline-flex items-center gap-1 text-[10px] font-bold tracking-wider text-brand-textMain mb-2 uppercase hover:opacity-75 transition-opacity">
+                    <i data-lucide="arrow-left" class="w-3 h-3"></i> Mi Perfil
+                </a>
+                <h1 class="text-3xl leading-tight font-extrabold text-brand-textMain mb-2 tracking-tight">Formación académica</h1>
+                <p class="text-xs text-brand-textMain/80 font-medium leading-relaxed max-w-[270px]">
+                    Registra tus estudios, grados obtenidos y certificados oficiales.
+                </p>
+            </header>
+
+            <div class="relative pl-4" id="timeline-container">
+                <div class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-brand-textMain/20"></div>
+                <div id="timeline-items" class="flex flex-col gap-5 w-full">
+                    <div id="emptyState" class="pl-6 py-8 text-left opacity-75">
+                        <p id="emptyStateText" class="text-xs font-medium text-brand-textMain/70">
+                            Aún no has agregado estudios. Usa el botón de abajo para registrar tu formación.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="admin-only absolute bottom-[92px] left-6 right-6 z-20">
+            <button id="btn-open-modal" aria-label="Añadir formación"
+                    class="w-full bg-brand-btnBg hover:bg-brand-beigeDark/60 text-brand-textMain font-bold text-xs py-4 rounded-xl shadow-chip border border-brand-beigeDark/30 flex items-center justify-center gap-2 transition-transform active:translate-y-1">
+                <i data-lucide="plus" class="w-4 h-4"></i> Añadir formación
+            </button>
+        </div>
+
+        <nav class="absolute bottom-6 left-6 right-6 bg-brand-navBg rounded-2xl px-6 py-5 flex justify-between items-center shadow-lg z-10">
+            <a href="perfil-usuario.html" class="text-[9px] font-bold text-brand-textMain">Inicio</a>
+            <a href="ProyectosPracticas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Proyectos</a>
+            <a href="ExperienciaLaboral.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Trayectoria</a>
+            <a href="InteresMetas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Metas</a>
+        </nav>
+
+        <div id="add-modal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-[#F5F2EA] w-full max-w-sm rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] modal-animate">
+                <div class="px-6 py-5 border-b border-gray-300/50 flex justify-between items-center bg-[#EAE5D9]/60">
+                    <h2 class="text-lg font-bold text-brand-textMain">Añadir nueva formación</h2>
+                    <button id="btn-close-modal" class="text-brand-textMuted hover:text-brand-textMain transition-colors rounded-full p-1.5 hover:bg-black/5" aria-label="Cerrar modal">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-6 overflow-y-auto no-scrollbar">
+                    <form id="form-formacion" class="flex flex-col gap-4">
+                        <div>
+                            <label for="titulo" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Título / Certificado *</label>
+                            <input type="text" id="titulo" required placeholder="Ej. Ingeniería en Sistemas" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-btnBg focus:border-brand-btnBg transition-all text-brand-textMain placeholder:text-gray-400">
+                        </div>
+                        <div>
+                            <label for="institucion" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Institución educativa *</label>
+                            <input type="text" id="institucion" required placeholder="Ej. Universidad Nacional" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-btnBg focus:border-brand-btnBg transition-all text-brand-textMain placeholder:text-gray-400">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="fecha_inicio" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Año de inicio</label>
+                                <input type="number" id="fecha_inicio" min="1950" max="2030" placeholder="2018" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-btnBg focus:border-brand-btnBg transition-all text-brand-textMain placeholder:text-gray-400">
+                            </div>
+                            <div>
+                                <label for="fecha_fin" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Año de fin</label>
+                                <input type="number" id="fecha_fin" min="1950" max="2030" placeholder="2022" class="w-full bg-white/80 border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-btnBg focus:border-brand-btnBg transition-all text-brand-textMain placeholder:text-gray-400">
+                            </div>
+                        </div>
+                        <div class="mt-1">
+                            <label class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-1.5 uppercase">Documento probatorio</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-xl p-5 flex flex-col items-center justify-center text-center bg-white/50 hover:bg-white/80 transition-colors cursor-pointer group">
+                                <div class="bg-brand-btnBg/50 p-2 rounded-full mb-2 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="upload-cloud" class="w-5 h-5 text-brand-textMain"></i>
+                                </div>
+                                <span class="text-xs text-brand-textMain font-medium">Sube tu certificado (PDF, JPG)</span>
+                                <span class="text-[10px] text-brand-textMuted mt-1">Opcional, máximo 5MB</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="px-6 py-4 bg-[#EAE5D9]/60 border-t border-gray-300/50 flex gap-3 justify-end">
+                    <button type="button" id="btn-cancel-modal" class="px-4 py-2.5 text-xs font-bold text-brand-textMain bg-transparent hover:bg-black/5 rounded-xl transition-colors">Cancelar</button>
+                    <button type="submit" form="form-formacion" class="px-5 py-2.5 text-xs font-bold text-white bg-brand-textMain hover:opacity-90 rounded-xl shadow-md transition-all active:scale-95">Guardar formación</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/formacion-academica.js"></script>
+</body>
+</html>

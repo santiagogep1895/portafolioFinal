@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Iniciar Sesión</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Estilos globales -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Tailwind CSS y configuración compartida -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 bg-login-gradient bg-gradient-to-b from-brand-bg-top to-brand-bg-bottom font-sans text-brand-text-dark antialiased">
+
+    <div class="w-full max-w-[420px] flex flex-col items-center">
+        
+        <header class="flex flex-col items-center mb-8 w-full">
+            <div class="w-28 h-28 rounded-full bg-brand-logo-bg shadow-logo flex items-center justify-center mb-5 border-4 border-white/10 relative overflow-hidden">
+                <div class="absolute inset-0 rounded-full shadow-[inset_0_-4px_10px_rgba(0,0,0,0.05)] pointer-events-none"></div>
+                
+                <!-- Logo SVG -->
+                <svg viewBox="0 0 100 100" class="w-16 h-16 transform translate-y-1 z-10" aria-hidden="true">
+                    <path d="M 32 42 L 72 42 L 72 62 L 52 82 L 32 82 Z" fill="#2a3b4c" />
+                    <path d="M 52 82 L 72 62 L 52 62 Z" fill="#1e2a36" opacity="0.5" />
+                    <path d="M 45 62 L 50 68 L 62 54" stroke="white" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M 52 14 L 88 28 L 52 42 L 16 28 Z" fill="#2a3b4c" />
+                    <path d="M 35 34 L 35 44 C 35 48, 69 48, 69 44 L 69 34 Z" fill="#2a3b4c" />
+                    <path d="M 52 28 C 65 32, 70 38, 73 45" stroke="#2a3b4c" stroke-width="2" fill="none" />
+                    <circle cx="52" cy="28" r="3" fill="#cc9f68" />
+                    <circle cx="73" cy="46" r="3.5" fill="#cc9f68" />
+                </svg>
+            </div>
+            <h1 class="text-[26px] font-extrabold text-brand-text-dark tracking-tight text-center">Portafolio de evidencias</h1>
+        </header>
+
+        <main class="w-full">
+            <div class="bg-white rounded-[40px] p-8 sm:p-10 w-full shadow-card mb-8">
+                
+                <div class="mb-6">
+                    <h2 class="text-[22px] font-bold text-brand-text-dark mb-2">Bienvenido de nuevo</h2>
+                    <p class="text-[13px] text-brand-text-muted">Ingresa para continuar con tu perfil</p>
+                </div>
+
+                <!-- Alerta de autenticación / verificación -->
+                <div id="authAlert" class="hidden mb-5 p-3.5 rounded-2xl text-xs font-semibold flex items-start gap-2.5 border">
+                    <i id="authAlertIcon" data-lucide="alert-circle" class="w-4 h-4 shrink-0 mt-0.5"></i>
+                    <span id="authAlertText">Mensaje de validación</span>
+                </div>
+
+                <form id="loginForm" class="space-y-5" novalidate>
+                    
+                    <!-- Campo: Correo Electrónico -->
+                    <div class="form-group">
+                        <label for="email" class="block text-[10px] font-bold text-brand-text-muted uppercase tracking-wider mb-2">Correo electrónico</label>
+                        <div class="relative flex items-center">
+                            <div class="absolute left-4 text-brand-text-muted pointer-events-none">
+                                <i data-lucide="mail" class="w-4 h-4 stroke-[2.5]"></i>
+                            </div>
+                            <input 
+                                type="email" 
+                                id="email"
+                                name="email"
+                                placeholder="correo@ejemplo.com" 
+                                required
+                                class="w-full pl-11 pr-4 py-3 rounded-xl border border-brand-input-border focus:outline-none focus:border-brand-text-muted focus:ring-1 focus:ring-brand-text-muted text-sm text-brand-text-dark placeholder-gray-400 transition-colors"
+                            >
+                        </div>
+                        <p id="emailError" class="error-message hidden text-brand-error text-xs mt-1.5 ml-1">Por favor, ingresa un correo válido.</p>
+                    </div>
+
+                    <!-- Campo: Contraseña -->
+                    <div class="form-group pt-1">
+                        <label for="password" class="block text-[10px] font-bold text-brand-text-muted uppercase tracking-wider mb-2">Contraseña</label>
+                        <div class="relative flex items-center">
+                            <input 
+                                type="password" 
+                                id="password"
+                                name="password"
+                                placeholder="••••••••"
+                                required
+                                class="w-full pl-4 pr-10 py-3 rounded-xl border border-brand-input-border focus:outline-none focus:border-brand-text-muted focus:ring-1 focus:ring-brand-text-muted text-sm tracking-widest text-brand-text-dark placeholder-gray-400 transition-colors"
+                            >
+                            <!-- Botón para mostrar/ocultar contraseña -->
+                            <button type="button" onclick="togglePassword('password', this)" class="absolute right-3.5 text-brand-text-muted hover:text-brand-text-dark transition-colors">
+                                <i data-lucide="eye" class="w-4 h-4"></i>
+                            </button>
+                        </div>
+                        <p id="passwordError" class="error-message hidden text-brand-error text-xs mt-1.5 ml-1">La contraseña es obligatoria.</p>
+                        
+                        <div class="flex justify-end mt-2">
+                            <a href="registro.html" class="text-[11px] text-brand-text-muted hover:text-brand-text-dark transition-colors">¿Olvidaste tu contraseña? Crea una cuenta nueva</a>
+                        </div>
+                    </div>
+
+                    <!-- Botón Iniciar Sesión -->
+                    <div class="pt-4">
+                        <button 
+                            type="submit" 
+                            id="submitBtn"
+                            class="w-full bg-brand-btn-primary hover:bg-brand-btn-primary-hover text-brand-text-dark font-bold text-[14px] py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-sm active:scale-[0.98]"
+                        >
+                            <span>Iniciar sesión</span>
+                            <i data-lucide="arrow-right" class="w-[18px] h-[18px] stroke-[2.5]"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Enlace real a registro.html -->
+                <div class="flex justify-between items-center mt-8 px-1">
+                    <span class="text-[12px] text-brand-text-muted">¿Aún no tienes cuenta?</span>
+                    <a href="registro.html" class="text-[12px] font-bold text-brand-text-dark hover:underline decoration-2 underline-offset-2">Crear cuenta</a>
+                </div>
+            </div>
+
+            <div class="w-full px-4">
+                <div class="w-full h-px bg-white/20 mb-8 rounded-full"></div>
+
+                <!-- Botón Invitado -->
+                <button 
+                    type="button" 
+                    id="guestBtn"
+                    class="w-full bg-brand-btn-guest hover:bg-brand-btn-guest-hover text-brand-text-dark font-bold text-[13px] py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] mb-10"
+                >
+                    <span>Continuar como invitado</span>
+                    <i data-lucide="arrow-up-right" class="w-[16px] h-[16px] stroke-[2.5]"></i>
+                </button>
+
+                <p class="text-center text-[10px] text-white/80 font-medium tracking-wide">
+                    Tu futuro empieza con lo que ya has logrado.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Lógica de Login y Autenticación -->
+    <script src="js/auth.js"></script>
+</body>
+</html>

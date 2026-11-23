@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Experiencia Laboral</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <main class="flex-1 overflow-y-auto no-scrollbar px-8 pt-16 pb-40">
+            <header class="mb-12">
+                <h1 class="text-[28px] leading-tight font-extrabold text-brand-textMain tracking-tight">Experiencia laboral</h1>
+            </header>
+
+            <section class="mb-14">
+                <h2 class="text-[10px] font-bold tracking-wider text-brand-textMuted mb-6 uppercase">Experiencia Laboral</h2>
+                <div id="lista-laboral" class="flex flex-col gap-3"></div>
+            </section>
+
+            <section class="mb-8">
+                <h2 class="text-[10px] font-bold tracking-wider text-brand-textMuted mb-6 uppercase">Prácticas y Servicio Social</h2>
+                <div id="lista-practicas" class="flex flex-col gap-3"></div>
+            </section>
+        </main>
+
+        <div class="admin-only absolute bottom-[92px] left-8 right-8 z-20">
+            <button onclick="openModal()" class="w-full bg-brand-btnBg text-brand-textMain font-bold text-[12px] py-4 rounded-xl shadow-md flex items-center justify-center gap-2 transition-transform active:translate-y-1">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                Añadir experiencia
+            </button>
+        </div>
+
+        <nav class="absolute bottom-6 left-6 right-6 bg-brand-navBg rounded-2xl px-6 py-5 flex justify-between items-center shadow-lg z-10">
+            <a href="perfil-usuario.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Inicio</a>
+            <a href="ProyectosPracticas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Proyectos</a>
+            <a href="#" class="text-[9px] font-bold text-brand-textMain">Trayectoria</a>
+            <a href="InteresMetas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Metas</a>
+        </nav>
+
+        <div id="addExperienceModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-brand-surface w-full max-w-sm rounded-[32px] p-6 shadow-2xl modal-animate flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-brand-textMain">Nueva Experiencia</h3>
+                    <button onclick="closeModal()" class="text-brand-textMuted hover:text-brand-textMain transition-colors bg-gray-100 rounded-full p-2">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="addExperienceForm" class="flex flex-col gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Categoría</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="expType" value="laboral" class="peer sr-only" checked>
+                                <div class="w-full text-center py-3 rounded-xl border-2 border-gray-100 bg-gray-50 text-brand-textMuted text-xs font-semibold transition-all peer-checked:border-brand-textMain peer-checked:bg-brand-textMain peer-checked:text-white">
+                                    Laboral
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="expType" value="practicas" class="peer sr-only">
+                                <div class="w-full text-center py-3 rounded-xl border-2 border-gray-100 bg-gray-50 text-brand-textMuted text-xs font-semibold transition-all peer-checked:border-brand-textMain peer-checked:bg-brand-textMain peer-checked:text-white">
+                                    Prácticas
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="jobTitle" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Puesto o Rol</label>
+                        <input type="text" id="jobTitle" required placeholder="Ej. Analista de Datos..." class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-btnBg focus:bg-white transition-colors placeholder:text-gray-400">
+                    </div>
+                    <div>
+                        <label for="companyName" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Empresa o Institución</label>
+                        <input type="text" id="companyName" required placeholder="Ej. Google, UANL..." class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-btnBg focus:bg-white transition-colors placeholder:text-gray-400">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label for="startDate" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Inicio</label>
+                            <input type="text" id="startDate" required placeholder="Ej. 2021" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-btnBg focus:bg-white transition-colors placeholder:text-gray-400">
+                        </div>
+                        <div>
+                            <label for="endDate" class="block text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Fin</label>
+                            <input type="text" id="endDate" placeholder="Ej. Presente" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 text-brand-textMain text-sm font-medium focus:outline-none focus:border-brand-btnBg focus:bg-white transition-colors placeholder:text-gray-400">
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-2 w-full bg-brand-textMain text-white font-bold text-sm py-4 rounded-[14px] shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+                        <i data-lucide="check" class="w-4 h-4"></i> Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+    <script src="js/experiencia.js"></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Evidencias - Intereses y Metas</title>
+    
+    <!-- CONEXIÓN PWA (Manifest) -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d6bc9f">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/tailwind-config.js"></script>
+</head>
+<body class="bg-gray-900 flex justify-center items-center min-h-screen">
+    <div class="relative w-full max-w-[428px] h-[100dvh] md:h-[850px] bg-app-gradient overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-8 border-gray-800 flex flex-col">
+        
+        <button type="button" class="absolute top-6 right-6 w-10 h-10 bg-brand-beigeLight rounded-full flex items-center justify-center shadow-md z-10 transition-transform active:scale-95">
+            <i data-lucide="sparkles" class="w-5 h-5 text-brand-textMain"></i>
+        </button>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar px-6 pt-12 pb-40">
+            <header class="mb-8">
+                <p class="text-[10px] font-bold tracking-wider text-brand-textMain mb-1 uppercase">Mi Futuro</p>
+                <h1 class="text-3xl font-extrabold text-brand-textMain mb-2 tracking-tight">Intereses y metas</h1>
+                <p class="text-xs text-brand-textMain/80 font-medium leading-relaxed max-w-[250px]">
+                    Define hacia dónde quieres crecer, paso a paso.
+                </p>
+            </header>
+
+            <!-- Sección Intereses Profesionales -->
+            <section class="mb-6">
+                <h2 class="text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Intereses Profesionales</h2>
+                <div id="interesesCard" class="bg-brand-surface rounded-[24px] p-5 shadow-card min-h-[120px] flex items-center justify-center relative group cursor-pointer hover:bg-gray-50 transition-colors" onclick="openModal('interes')">
+                    <p id="intereses-text" class="text-sm text-brand-textMuted text-center">Toca para añadir tus intereses profesionales...</p>
+                    <div class="admin-only absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-brand-surface/50 rounded-[24px] backdrop-blur-[2px]">
+                        <i data-lucide="edit-2" class="w-6 h-6 text-brand-textMain"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Aficiones -->
+            <section class="mb-8">
+                <h2 class="text-[10px] font-bold tracking-wider text-brand-textMuted mb-2 uppercase">Aficiones</h2>
+                <div id="aficiones-grid" class="grid grid-cols-3 gap-3">
+                    <div class="admin-only relative bg-brand-surface rounded-[20px] h-24 shadow-card flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors" onclick="openModal('aficion')">
+                        <i data-lucide="plus" class="w-6 h-6 text-brand-textMuted"></i>
+                    </div>
+                    <div class="admin-only relative bg-brand-surface rounded-[20px] h-24 shadow-card flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors" onclick="openModal('aficion')">
+                        <i data-lucide="plus" class="w-6 h-6 text-brand-textMuted"></i>
+                    </div>
+                    <div class="admin-only relative bg-brand-surface rounded-[20px] h-24 shadow-card flex items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors" onclick="openModal('aficion')">
+                        <i data-lucide="plus" class="w-6 h-6 text-brand-textMuted"></i>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sección Metas de Desarrollo -->
+            <section class="mb-8">
+                <h2 class="text-[10px] font-bold tracking-wider text-brand-textMuted mb-4 uppercase">Metas de Desarrollo</h2>
+                <div class="relative pl-6" id="timeline-container">
+                    <div class="absolute left-[11px] top-4 bottom-0 w-0.5 bg-gray-400/50"></div>
+                    <div class="relative mb-6">
+                        <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-brand-timelineGreen border-2 border-brand-bgMid shadow-sm z-10"></div>
+                        <div class="bg-brand-surface rounded-[16px] p-4 shadow-card min-h-[80px]">
+                            <h3 class="text-[10px] font-bold text-brand-textMuted mb-1">Próximos 3 meses</h3>
+                            <div id="meta-3-meses" class="text-sm font-medium text-brand-textMain"></div>
+                        </div>
+                    </div>
+                    <div class="relative mb-6">
+                        <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-brand-timelineYellow border-2 border-brand-bgMid shadow-sm z-10"></div>
+                        <div class="bg-brand-surface rounded-[16px] p-4 shadow-card min-h-[80px]">
+                            <h3 class="text-[10px] font-bold text-brand-textMuted mb-1">En 6 meses</h3>
+                            <div id="meta-6-meses" class="text-sm font-medium text-brand-textMain"></div>
+                        </div>
+                    </div>
+                    <div class="relative mb-6">
+                        <div class="absolute -left-6 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-brand-timelineRed border-2 border-brand-bgMid shadow-sm z-10"></div>
+                        <div class="bg-brand-surface rounded-[16px] p-4 shadow-card min-h-[80px]">
+                            <h3 class="text-[10px] font-bold text-brand-textMuted mb-1">En 1 año</h3>
+                            <div id="meta-1-ano" class="text-sm font-medium text-brand-textMain"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Botón Añadir Meta -->
+        <div class="admin-only absolute bottom-[92px] left-6 right-6 z-20">
+            <button type="button" onclick="openModal('meta')" class="w-full bg-brand-beigeLight text-brand-textMain font-bold text-xs py-4 rounded-xl shadow-chip border border-brand-beigeDark/30 flex items-center justify-center gap-2 transition-transform active:translate-y-1 active:shadow-none">
+                <i data-lucide="plus" class="w-4 h-4"></i> Añadir meta
+            </button>
+        </div>
+
+        <!-- Barra de Navegación Inferior -->
+        <nav class="absolute bottom-6 left-6 right-6 bg-brand-navBg rounded-2xl px-6 py-5 flex justify-between items-center shadow-lg z-10">
+            <a href="perfil-usuario.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Inicio</a>
+            <a href="ProyectosPracticas.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Proyectos</a>
+            <a href="ExperienciaLaboral.html" class="text-[9px] text-brand-textMuted hover:text-brand-textMain transition-colors">Trayectoria</a>
+            <a href="#" class="text-[9px] font-bold text-brand-textMain">Metas</a>
+        </nav>
+
+        <!-- Modal Universal -->
+        <div id="dynamicModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm">
+            <div class="bg-brand-surface w-full max-w-sm rounded-[32px] p-6 shadow-2xl modal-animate flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 id="modalTitle" class="text-lg font-bold text-brand-textMain">Añadir</h3>
+                    <button type="button" onclick="closeModal()" class="text-brand-textMuted hover:text-brand-textMain transition-colors bg-gray-100 rounded-full p-2">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <form id="dynamicForm" class="flex flex-col gap-5">
+                    <input type="hidden" id="modalType" value="">
+                    <div id="modalFields"></div>
+                    <button type="submit" class="mt-2 w-full bg-brand-textMain text-white font-bold text-sm py-4 rounded-[14px] shadow-lg flex items-center justify-center gap-2 transition-transform active:scale-95">
+                        <i data-lucide="check" class="w-4 h-4"></i> Guardar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Autorización y Lógica de Intereses y Metas -->
+    <script src="js/auth.js"></script>
+    <script src="js/metas.js"></script>
+</body>
+</html>
